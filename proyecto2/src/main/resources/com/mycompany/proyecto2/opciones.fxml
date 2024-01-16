@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane fx:id="Pane2" prefHeight="500.0" prefWidth="700.0" styleClass="Pane2" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.proyecto2.OpcionesController">
+   <children>
+      <Button layoutX="14.0" layoutY="120.0" mnemonicParsing="false" onAction="#nuevoJuego" opacity="0.0" prefHeight="49.0" prefWidth="471.0" />
+      <Button layoutX="15.0" layoutY="279.0" mnemonicParsing="false" onAction="#cargarJuego" opacity="0.0" prefHeight="49.0" prefWidth="471.0" />
+      <Button layoutY="8.0" mnemonicParsing="false" onAction="#regresar" opacity="0.0" prefHeight="56.0" prefWidth="129.0" />
+   </children>
+</Pane>
