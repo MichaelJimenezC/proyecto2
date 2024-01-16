@@ -31,6 +31,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Random;
+import java.util.HashSet;
 import java.util.Comparator;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -77,8 +79,10 @@ public class Game extends Application implements Serializable {
         btnSave.setOnAction(event -> saveGame());
         Button btnBack = new Button("Regresar");
         btnBack.setOnAction(event -> regresar());
+        Button btnRecomendation = new Button("Mostrar recomendación");
+        btnRecomendation.setOnAction(event -> recomendar());
         HBox botones = new HBox();
-        botones.getChildren().addAll(btnBack, btnSave);
+        botones.getChildren().addAll(btnBack, btnSave, btnRecomendation);
         botones.setAlignment(Pos.CENTER);
         botones.setSpacing(20);
         board = new Board();
@@ -112,6 +116,40 @@ public class Game extends Application implements Serializable {
             ex.printStackTrace();
         }
 
+    }
+
+    private String determinarRecomendacion(Board board) {
+        HashSet<Integer> availableMoves = board.getAvailableMoves();
+
+        if (availableMoves.isEmpty()) {
+            return "El tablero está lleno. ¡Es un empate!";
+        }
+
+        Random random = new Random();
+        int randomMove = (int) availableMoves.toArray()[random.nextInt(availableMoves.size())];
+
+        int row = randomMove / Board.BOARD_WIDTH;
+        int col = randomMove % Board.BOARD_WIDTH;
+
+        return String.format("Recomendación: Colocar %s en la posición (%d, %d)", board.getTurn(), row, col);
+    }
+
+    
+    private void recomendar(){
+        if (!board.isGameOver()) {
+            String recomendacion = determinarRecomendacion(board);
+            mostrarAlerta("Recomendación", recomendacion, AlertType.INFORMATION);
+        } else {
+            mostrarAlerta("Juego Terminado", "El juego ha terminado. Reinicia para recibir recomendaciones.", AlertType.WARNING);
+        }
+    }
+    
+     private void mostrarAlerta(String titulo, String contenido, AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(contenido);
+        alert.showAndWait();
     }
 
     private void determineMode() {
