@@ -161,6 +161,7 @@ public class Game extends Application implements Serializable {
             mode = Mode.Player;
         } else if (MenuModosController.modo.equals("AIvsAI")) {
             mode = Mode.AIvsAI;
+             simulateAIvsAI();
         }
         canvas.setOnMouseClicked(this::handleMouseClick);
     }
