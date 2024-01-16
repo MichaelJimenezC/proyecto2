@@ -347,7 +347,7 @@ public class Game extends Application implements Serializable {
         String filename = "game_" + timestamp + "_" + this.mode + ".dat";
 
         try ( ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(board); // Asumiendo que 'board' es el objeto que deseas guardar
+            oos.writeObject(this); // Asumiendo que 'board' es el objeto que deseas guardar
         } catch (IOException e) {
             e.printStackTrace();
             // Manejar el error adecuadamente
