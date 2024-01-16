@@ -4,6 +4,7 @@ import com.mycompany.proyecto2.Game;
 import Logica.Tree;
 import com.mycompany.proyecto2.Board.State;
 import javafx.stage.Stage;
+import com.mycompany.proyecto2.Board.State;
 
 public class MiniMax {
 
