@@ -5,7 +5,7 @@
 package com.mycompany.proyecto2;
 
 import com.mycompany.proyecto2.MiniMax;
-import com.mycompany.tresenraya.Board;
+import com.mycompany.proyecto2.Board;
 
 /**
  *
