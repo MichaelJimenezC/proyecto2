@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.mycompany.tresenraya;
+package com.mycompany.proyecto2;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -10,10 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
-/**
- *
- * @author Michael
- */
+
 public class Board implements Serializable {
 static final int BOARD_WIDTH = 3;
 
