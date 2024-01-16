@@ -43,7 +43,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
-import logica.Tree;
+import Logica.Tree;
+import java.util.Optional;
+import javafx.scene.control.ButtonType;
 
 /**
  *
@@ -255,7 +257,31 @@ public class Game extends Application implements Serializable {
             }
         }
     }
-
+   private void simulateAIvsAI() {
+        new Thread(() -> {
+            while (true) { // Bucle infinito para reiniciar el juego continuamente
+                while (!board.isGameOver()) {
+                    playMoveAI();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Platform.runLater(() -> {
+                    draw();
+                    paintWinner(canvas.getGraphicsContext2D());
+                    board.reset(); // Resetea el tablero para una nueva partida
+                    draw(); // Dibuja el tablero vacío
+                });
+                try {
+                    Thread.sleep(2000); // Espera antes de iniciar una nueva partida
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
     private void playMove(MouseEvent event) {
         int move = getMove(new javafx.geometry.Point2D(event.getX(), event.getY()));
         if (move != -1 && board.move(move)) {
@@ -299,4 +325,70 @@ public class Game extends Application implements Serializable {
         this.board = board;
     }
 
+ private void saveGame() {
+        // Definimos la carpeta donde se guardarán los archivos
+        File saveDir = new File(System.getProperty("user.dir"));
+        // Obtenemos la lista de archivos de partidas guardadas
+        File[] saveFiles = saveDir.listFiles((dir, name) -> name.startsWith("game_") && name.endsWith(".dat"));
+
+        // Verificamos si el arreglo no es nulo y tiene más de 3 partidas (para mantener máximo 4)
+        if (saveFiles != null && saveFiles.length >= 4) {
+            // Ordenamos los archivos por fecha de modificación para eliminar el más antiguo
+            Arrays.sort(saveFiles, Comparator.comparingLong(File::lastModified));
+            // Eliminamos la partida más antigua
+            saveFiles[0].delete(); // Elimina el archivo más antiguo
+        }
+
+        // Guardamos la nueva partida
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String timestamp = now.format(formatter);
+        String filename = "game_" + timestamp + "_" + this.mode + ".dat";
+
+        try ( ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            oos.writeObject(board); // Asumiendo que 'board' es el objeto que deseas guardar
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Manejar el error adecuadamente
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Partida Guardada");
+        alert.setHeaderText("La partida se ha guardado con éxito.");
+        alert.setContentText("¿Deseas salir o seguir jugando?");
+        // Crear botones para las opciones
+        ButtonType buttonTypeOne = new ButtonType("Salir");
+        ButtonType buttonTypeTwo = new ButtonType("Seguir Jugando");
+        // Añadir botones al Alert
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+        // Mostrar el Alert y esperar por la respuesta del usuario
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == buttonTypeOne) {
+            App.cerrar(root);
+            App app = new App();
+
+            try {
+                app.start(new Stage());
+                app.setRoot("opciones");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            // El usuario elige seguir jugando
+            // Aquí no es necesario hacer nada, el juego continúa
+        }
+    }
+
+    public void loadGame(String filename) {
+        try ( ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            Game game = (Game) ois.readObject();
+            board = game.board;
+            mode = game.mode;
+            draw(); // Dibuja el estado del juego cargado
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            // Manejar error
+        }
+    }
 }
+

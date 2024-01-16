@@ -1,7 +1,8 @@
 package com.mycompany.proyecto2;
 
 import com.mycompany.proyecto2.Game;
-import logica.Tree;
+import Logica.Tree;
+import com.mycompany.proyecto2.Board.State;
 import javafx.stage.Stage;
 import com.mycompany.proyecto2.Board.State;
 
