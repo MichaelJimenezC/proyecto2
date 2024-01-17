@@ -169,7 +169,7 @@ public class Game extends Application implements Serializable {
    
 
     private void playMoveAI() {
-        Algorithms.miniMax(board);
+        MiniMax.run(board.getTurn(), board, Double.POSITIVE_INFINITY);
         draw();
         System.out.println(intermediateBoards.size());
     }
