@@ -93,7 +93,7 @@ public class Game extends Application implements Serializable {
 
         canvas = new Canvas(WIDTH, HEIGHT);
         canvas.setOnMouseClicked(this::handleMouseClick);
-        VBox layout = new VBox(10, botones, canvas); // Añadir el botón debajo del canvas
+        VBox layout = new VBox(10, botones, canvas); 
         layout.setAlignment(Pos.CENTER);
         root = new BorderPane(layout);
         root.setAlignment(canvas, Pos.CENTER);
@@ -260,7 +260,7 @@ public class Game extends Application implements Serializable {
     }
    private void simulateAIvsAI() {
         new Thread(() -> {
-            while (true) { // Bucle infinito para reiniciar el juego continuamente
+            while (true) { 
                 while (!board.isGameOver()) {
                     playMoveAI();
                     try {
@@ -272,11 +272,11 @@ public class Game extends Application implements Serializable {
                 Platform.runLater(() -> {
                     draw();
                     paintWinner(canvas.getGraphicsContext2D());
-                    board.reset(); // Resetea el tablero para una nueva partida
-                    draw(); // Dibuja el tablero vacío
+                    board.reset();  
+                    draw(); 
                 });
                 try {
-                    Thread.sleep(2000); // Espera antes de iniciar una nueva partida
+                    Thread.sleep(2000); 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -327,17 +327,12 @@ public class Game extends Application implements Serializable {
     }
 
  private void saveGame() {
-        // Definimos la carpeta donde se guardarán los archivos
         File saveDir = new File(System.getProperty("user.dir"));
-        // Obtenemos la lista de archivos de partidas guardadas
         File[] saveFiles = saveDir.listFiles((dir, name) -> name.startsWith("game_") && name.endsWith(".dat"));
 
-        // Verificamos si el arreglo no es nulo y tiene más de 3 partidas (para mantener máximo 4)
         if (saveFiles != null && saveFiles.length >= 4) {
-            // Ordenamos los archivos por fecha de modificación para eliminar el más antiguo
             Arrays.sort(saveFiles, Comparator.comparingLong(File::lastModified));
-            // Eliminamos la partida más antigua
-            saveFiles[0].delete(); // Elimina el archivo más antiguo
+            saveFiles[0].delete(); 
         }
 
         // Guardamos la nueva partida
@@ -347,22 +342,18 @@ public class Game extends Application implements Serializable {
         String filename = "game_" + timestamp + "_" + this.mode + ".dat";
 
         try ( ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(board); // Asumiendo que 'board' es el objeto que deseas guardar
+            oos.writeObject(this); 
         } catch (IOException e) {
             e.printStackTrace();
-            // Manejar el error adecuadamente
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Partida Guardada");
         alert.setHeaderText("La partida se ha guardado con éxito.");
         alert.setContentText("¿Deseas salir o seguir jugando?");
-        // Crear botones para las opciones
         ButtonType buttonTypeOne = new ButtonType("Salir");
         ButtonType buttonTypeTwo = new ButtonType("Seguir Jugando");
-        // Añadir botones al Alert
         alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
 
-        // Mostrar el Alert y esperar por la respuesta del usuario
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == buttonTypeOne) {
             App.cerrar(root);
@@ -374,10 +365,7 @@ public class Game extends Application implements Serializable {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        } else {
-            // El usuario elige seguir jugando
-            // Aquí no es necesario hacer nada, el juego continúa
-        }
+        } 
     }
 
     public void loadGame(String filename) {
@@ -385,10 +373,9 @@ public class Game extends Application implements Serializable {
             Game game = (Game) ois.readObject();
             board = game.board;
             mode = game.mode;
-            draw(); // Dibuja el estado del juego cargado
+            draw(); 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            // Manejar error
         }
     }
 }
